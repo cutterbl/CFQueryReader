@@ -1,0 +1,28 @@
+/*
+ // ***************************************************************************************
+ //		CLASS|TEMPLATE:
+ //		/css/default.css
+ //
+ //		PURPOSE:
+ //		Default styles for inclusion throughout the site
+ //
+ //		COPYRIGHT:
+ //		Stephen G. 'Cutter' Blades, Jr. (c) 2009
+ //
+ //		LICENSE:
+ //		Modification and use of this template, for any purpose, is strictly encouraged.
+ //		There is no license, you are completely permitted to butcher in whatever
+ //		fashion you see fit, just take my name off first to protect the horribly guilty.
+ //
+ //		CHANGE LOG:
+ // ***************************************************************************************
+ //		SGB [05.12.09]
+ //		Template created
+ // ***************************************************************************************
+ */
+
+.x-panel-body, .x-panel-body-noheader {
+	padding: 5px;
+	background-color: #E6E8E8;
+	color: #000;
+}
