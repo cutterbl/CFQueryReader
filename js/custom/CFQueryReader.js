@@ -100,7 +100,6 @@
 
 Ext.data.CFQueryReader = Ext.extend(Ext.data.ArrayReader, {
 	read : function(response){
-        console.log(response);
         var json = response.responseText;
         var o = eval("("+json+")");
         if(!o) {
