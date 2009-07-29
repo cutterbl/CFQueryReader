@@ -129,7 +129,7 @@ Ext.onReady(function(){
     sds.load();
     
     // Test getAllQCFG
-	/*var qds = new Ext.data.Store({
+	var qds = new Ext.data.Store({
             url: '/com/cutterscrossing/Test.cfc',
             id: 'QueryConvertForGrid',
             baseParams:{
@@ -143,11 +143,11 @@ Ext.onReady(function(){
                 load:{
                 	fn: testStore
                 },
-                loadexception: {
+                exception: {
                 	fn: function() {
-                    	//console.log(arguments);
-                    	//console.log("Response Text?"+response.responseText);
-                    	//console.log("dgStore Message \n"+proxy+"\n"+store+"\n"+response+"\n"+e.message);
+                    	console.log(arguments);
+                    	console.log("Response Text?"+response.responseText);
+                    	console.log("dgStore Message \n"+proxy+"\n"+store+"\n"+response+"\n"+e.message);
                 	}
                 }
             }
@@ -170,15 +170,15 @@ Ext.onReady(function(){
                 load:{
                 	fn: testStore
                 },
-                loadexception: {
+                exception: {
                 	fn: function() {
-                    	//console.log(arguments);
-                    	//console.log("Response Text?"+response.responseText);
-                    	//console.log("dgStore Message \n"+proxy+"\n"+store+"\n"+response+"\n"+e.message);
+                    	console.log(arguments);
+                    	console.log("Response Text?"+response.responseText);
+                    	console.log("dgStore Message \n"+proxy+"\n"+store+"\n"+response+"\n"+e.message);
                 	}
                 }
             }
     });
-    stds.load();*/
+    stds.load();
     
 },document);

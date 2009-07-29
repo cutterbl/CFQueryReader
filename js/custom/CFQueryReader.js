@@ -111,9 +111,9 @@ Ext.data.CFQueryReader = Ext.extend(Ext.data.ArrayReader, {
 	readRecords : function(o){
         this.jsonData = o;
         var s = this.meta, Record = this.recordType,
-            f = Record.prototype.fields, fi = f.items, fl = f.length;
+            f = Record.prototype.fields, fi = f.items, fl = f.length,reset = false;
         
-        if (!this.ef) {
+        if (!this.ef || !this.getQueryRoot) {
 	        if(s.successProperty) {
 	            this.getSuccess = this.getJsonAccessor(s.successProperty);
 	        }
@@ -157,7 +157,7 @@ Ext.data.CFQueryReader = Ext.extend(Ext.data.ArrayReader, {
         	fi[b].mapArrLoc =  cols.indexOf(Ext.util.Format.uppercase(fMap));
         }
     	
-    	if (!this.ef) {
+    	if (!this.ef || reset === true) {
            if (s.id) {
 	       		this.getId = function(rec){
 	        		var r = rec[s.id];
