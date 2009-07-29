@@ -9,7 +9,7 @@
 * Steve 'Cutter' Blades (CutterBl) no.junkATcutterscrossingDOTcom
 * http://blog.cutterscrossing.com
 * 
-* @@@ Ext.data.CFQueryReader v 1.1 [05.12.09] @@@
+* @@@ Ext.data.CFQueryReader v 1.2 [07.29.09] @@@
 *
 * Inspired by the CFJsonReader, originally writtin by John Wilson (Daemach)
 * http://extjs.com/forum/showthread.php?t=21408&highlight=cfjsonreader
@@ -21,7 +21,9 @@
 * The CFQueryReader constructor takes two arguments
 * @meta			: object containing key/value pairs for each record (See ArrayReader Config Options)
 * @recordType	: field mapping object
-* 
+* ------------------------------------------------------------------------------------
+* REVISION: [07.29.09]
+* Small revisions to support Ext 3.0+, with backwards compatibility for Ext 2.x
 * ------------------------------------------------------------------------------------
 * REVISON: [05.12.09]
 * Tested, and fully functional, with Ext JS 2.2, and a fresh (20:30 CDT) build of Ext 3.0
