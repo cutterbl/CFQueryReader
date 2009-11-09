@@ -22,6 +22,11 @@
 * @meta			: object containing key/value pairs for each record (See ArrayReader Config Options)
 * @recordType	: field mapping object
 * ------------------------------------------------------------------------------------
+* REVISION: [11.09.09]
+* One of the frameworks will return lower cased column names, so we include some code
+* that uppercases them in the references used to dynamically generate the methods
+* for getting column data. This doesn't change the actual JSON object, just by ref
+* ------------------------------------------------------------------------------------
 * REVISION: [07.29.09]
 * Small revisions to support Ext 3.0+, with backwards compatibility for Ext 2.x
 * ------------------------------------------------------------------------------------
@@ -138,7 +143,10 @@ Ext.data.CFQueryReader = Ext.extend(Ext.data.ArrayReader, {
         
         var root = this.getRoot(o), c = root.length, totalRecords = c, success = true;
         var cols = this.getQueryRoot(o).COLUMNS;
-        
+		
+		for (var i = 0;i < cols.length;i++){
+			cols[i] = cols[i].toUpperCase();
+		}
         
         if(s.totalProperty || o.TOTALROWCOUNT){
             var v = parseInt(this.getTotal(o), 10);
@@ -156,7 +164,7 @@ Ext.data.CFQueryReader = Ext.extend(Ext.data.ArrayReader, {
         
     	for(b=0;b < fl; b++){
         	var fMap = (fi[b].mapping !== undefined && fi[b].mapping !== null) ? fi[b].mapping : fi[b].name;
-        	fi[b].mapArrLoc =  cols.indexOf(Ext.util.Format.uppercase(fMap));
+        	fi[b].mapArrLoc = cols.indexOf(fMap.toUpperCase());
         }
     	
     	if (!this.ef || reset === true) {
