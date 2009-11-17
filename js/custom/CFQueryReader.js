@@ -119,7 +119,9 @@ Ext.data.CFQueryReader = Ext.extend(Ext.data.ArrayReader, {
         this.jsonData = o;
         var s = this.meta, Record = this.recordType,
             f = Record.prototype.fields, fi = f.items, fl = f.length,reset = false;
-        
+        if(typeof this.getJsonAccessor != "function"){
+			this.getJsonAccessor = this.createAccessor;
+		}
         if (!this.ef || !this.getQueryRoot) {
 	        if(s.successProperty) {
 	            this.getSuccess = this.getJsonAccessor(s.successProperty);
