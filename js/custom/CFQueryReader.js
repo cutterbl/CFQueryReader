@@ -22,6 +22,12 @@
 * @meta			: object containing key/value pairs for each record (See ArrayReader Config Options)
 * @recordType	: field mapping object
 * ------------------------------------------------------------------------------------
+* REVISION: [11.17.09]
+* The 3.0.3 update to ExtJs changed the base Ext.data.JsonReader class (which is
+* extended by Ext.data.ArrayReader, which is extended by the CFQueryReader), and
+* renamed a key function from getJsonAccessor() to createAccessor(). I've added
+* code to compensate, while maintaining backwards compatibility.
+* ------------------------------------------------------------------------------------
 * REVISION: [11.09.09]
 * One of the frameworks will return lower cased column names, so we include some code
 * that uppercases them in the references used to dynamically generate the methods
