@@ -130,7 +130,7 @@ Ext.onReady(function(){
     
     // Test getAllQCFG
 	var qds = new Ext.data.Store({
-            url: '/com/cutterscrossing/Test.cfc',
+            url: '/com/cc/ArtGallery/Artists.cfc',
             id: 'QueryConvertForGrid',
             baseParams:{
             	method: 'getAllQCFG',
@@ -156,7 +156,7 @@ Ext.onReady(function(){
     
     // Test getAllInStruct
 	var stds = new Ext.data.Store({
-            url: '/com/cutterscrossing/Test.cfc',
+            url: '/com/cc/ArtGallery/Artists.cfc',
             id: 'Struct',
             baseParams:{
             	method: 'getAllInStruct',

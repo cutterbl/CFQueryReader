@@ -1,0 +1,112 @@
+<!---
+ //	********************************************************************************************
+ //	CLASS:
+ //	com.cc.ArtGallery.Artists
+ //
+ //	PURPOSE:
+ //	This file is used for supplying ColdFusion Query returns in several different situations.
+ //	The Data returns are used to test the CFQueryReader.js functionality, as a custom DataReader
+ //	for use with an Ext.data.Store. A special reader is required to properly parse the JSON
+ // format that Adobe used for ColdFusion's JSON implementation of a Query object's serialization
+ //
+ // ********************************************************************************************
+ // SGB [05.12.09]:
+ // Initial Creation
+ // ********************************************************************************************
+ --->
+<cfcomponent displayname="Test" output="false">
+	<!---
+	 //	For our examples we'll use the cfartgallery datasource included with the CF 8 DevEd install
+	 --->
+	<cfset VARIABLES.dsn = "cfartgallery" />
+
+	<!---
+	 //	A function to return a very basic ColdFusion Query object
+	 --->
+	<cffunction name="getAllStandard" output="false" access="remote" returntype="any">
+		<cfset var locVars = {} />
+		<cftry>
+			<cfquery name="locVars.retVal" datasource="#VARIABLES.dsn#">
+				SELECT 	artistID,
+						firstName,
+						lastName,
+						address,
+						city,
+						state,
+						postalCode,
+						email,
+						phone,
+						fax,
+						thePassword
+				FROM	Artists
+			</cfquery>
+			<cfcatch type="any">
+				<cfset locVars.retVal = QueryNew('artistID,firstName,lastName,address,city,state,zip,email,phone,fax,thePassword') />
+			</cfcatch>
+		</cftry>
+		<cfreturn locVars.retVal />
+	</cffunction>
+
+	<!---
+	 //	This function returns a ColdFusion object, created by the QueryConvertForGrid() method.
+	 //	The method returns a struct, with the Query object as one key and the total count as another.
+	 // See the Adobe ColdFusion 8 documentation for more information on QueryConvertForGrid(), which
+	 //	is used for *very* basic paging sets for simple paging grids with a low number of overall records.
+	 --->
+	<cffunction name="getAllQCFG" output="false" access="remote" returntype="any">
+		<cfset var locVars = {} />
+		<cftry>
+			<cfquery name="locVars.retVal" datasource="#VARIABLES.dsn#">
+				SELECT 	artistID,
+						firstName,
+						lastName,
+						address,
+						city,
+						state,
+						postalCode,
+						email,
+						phone,
+						fax,
+						thePassword
+				FROM	Artists
+			</cfquery>
+			<cfcatch type="any">
+				<cfset locVars.retVal = QueryNew('artistID,firstName,lastName,address,city,state,zip,email,phone,fax,thePassword') />
+			</cfcatch>
+		</cftry>
+		<cfreturn QueryConvertForGrid(locVars.retVal,2,10) />
+	</cffunction>
+
+	<!---
+	 //	This function returns the ColdFusion Query object as part of a struct object. We are implicitly
+	 //	setting the TOTALROWCOUNT variable to fake out our reader, showing that the totalProperty attribute
+	 // of the meta object will work properly. This also lets us further test the root attribute of the
+	 // meta object, as well as how well the CFQueryReader will map columns to values for later data retrieval
+	 --->
+	<cffunction name="getAllInStruct" output="false" access="remote" returntype="any">
+		<cfset var locVars = {} />
+		<cfset locVars.retVal.success = true />
+		<cfset locVars.retVal.TOTALROWCOUNT = 912 />
+		<cftry>
+			<cfquery name="locVars.retVal.getArtists" datasource="#VARIABLES.dsn#">
+				SELECT 	artistID,
+						firstName,
+						lastName,
+						address,
+						city,
+						state,
+						postalCode,
+						email,
+						phone,
+						fax,
+						thePassword
+				FROM	Artists
+			</cfquery>
+			<cfcatch type="any">
+				<cfset locVars.retVal.success = false />
+				<cfset locVars.retVal.message = "There was a failure pulling the information from the database." />
+			</cfcatch>
+		</cftry>
+		<cfreturn locVars.retVal />
+	</cffunction>
+</cfcomponent>
