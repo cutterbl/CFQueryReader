@@ -52,11 +52,11 @@ component {
 						thePassword
 				FROM	Artists";
 		LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
-		//try {
+		try {
 			LOCAL.retVal = LOCAL.q.execute().getResult();
-		/*} catch (any excpt) {
+		} catch (any excpt) {
 			LOCAL.retVal = QueryNew('artistID,firstName,lastName,address,city,state,zip,email,phone,fax,thePassword');
-		}*/
+		}
 		return LOCAL.retVal;
 	}
 

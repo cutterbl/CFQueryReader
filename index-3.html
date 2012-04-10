@@ -2,11 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>CFQueryReader Demo for ExtJS 3.x</title>
-		<!-- <link rel="stylesheet" type="text/css" href="/js/ext-2.1/resources/css/ext-all.css" /> -->
 		<link rel="stylesheet" type="text/css" href="/js/ext-3/resources/css/ext-all.css" />
 		<link rel="stylesheet" type="text/css" href="/css/default.css" />
-		<!-- <script language="javascript" type="text/javascript" src="/js/ext-2.1/adapter/ext/ext-base.js"></script>
-		<script language="javascript" type="text/javascript" src="/js/ext-2.1/ext-all-debug.js"></script> -->
+		<link rel="shortcut icon" href="/favicon_32x32.ico" />
 		<script language="javascript" type="text/javascript" src="/js/ext-3/adapter/ext/ext-base.js"></script>
 		<script language="javascript" type="text/javascript" src="/js/ext-3/ext-all-debug.js"></script>
 		<script language="javascript" type="text/javascript" src="/servicebus/Api.cfm"></script>
@@ -14,7 +12,14 @@
 		<script language="javascript" type="text/javascript" src="/js/custom/test-extjs_3.js"></script>
 	</head>
 	<body>
-		<p>In here</p>
+		<div id="content">
+		<p>This is a Demo for CFQueryReader with <a href="/js/ext-3/docs/" target="_blank">ExtJS 3.2</a>. ExtJS 3.1 is the version of ExtJS included in fully patched versions of ColdFusion 9, while this custom data reader was tested with each release of ExtJS 2 and 3. There are three stores defined in the script:</p>
+		<ul>
+			<li>Standard - The remote method returns a JSON serialized representation of a standard ColdFusion query object.</li>
+			<li>QueryConvertForGrid - The remote method returns a JSON serialized representation of the struct returned by ColdFusion's <a href="http://www.cfquickdocs.com/cf9/?newVersion=1&getDoc=QueryConvertForGrid#QueryConvertForGrid" target="_blank">QueryConvertForGrid</a> method.</li>
+			<li>Struct - The remote method returns a JSON serialized representation of a developer defined ColdFusion struct, which includes a key containing a ColdFusion query object.</li>
+		</ul>
 		<div id="testGrid"></div>
+		</div>
 	</body>
 </html>
