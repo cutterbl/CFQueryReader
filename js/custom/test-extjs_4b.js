@@ -39,7 +39,7 @@ Ext.BLANK_IMAGE_URL = "/resources/scripts/extjs/resources/themes/images/default/
 	});
 	
 	Ext.create('Ext.grid.Panel',{
-		title: 'Testing: GetAllStandard',
+		title: 'Testing: GetAllStandard (Basic CF Query object)',
 		store: Ext.getStore('artistStore_1'),
 		columns: [
 		    {header: 'ID', dataIndex: 'artistId'},
@@ -72,7 +72,7 @@ Ext.BLANK_IMAGE_URL = "/resources/scripts/extjs/resources/themes/images/default/
 	});
 	
 	Ext.create('Ext.grid.Panel',{
-		title: 'Testing: getAllQCFG (QueryForGrid limited)',
+		title: 'Testing: getAllQCFG (QueryForGrid created struct)',
 		store: Ext.getStore('artistStore_2'),
 		columns: [
 		    {header: 'ID', dataIndex: 'artistId'},
@@ -109,7 +109,7 @@ Ext.BLANK_IMAGE_URL = "/resources/scripts/extjs/resources/themes/images/default/
 	});
 	
 	Ext.create('Ext.grid.Panel',{
-		title: 'Testing: getAllInStruct',
+		title: 'Testing: getAllInStruct (query as part of custom struct)',
 		store: Ext.getStore('artistStore_3'),
 		columns: [
 		    {header: 'ID', dataIndex: 'artistId'},

@@ -1,12 +1,246 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html>
 	<head>
-		<title>CFQueryReader</title>
+		<title>CFQueryReader Demos: Custom ExtJS data reader for native ColdFusion query data</title>
+		<style>
+			body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, button, textarea, p, blockquote, th, td {
+			    margin: 0;
+			    padding: 0;
+			}
+			
+			address, caption, cite, code, dfn, em, strong, th, var, optgroup {
+			    font-style: inherit;
+			    font-weight: inherit;
+			}
+			
+			body {
+				background: url("/images/main2-bg.jpg") repeat scroll center top transparent;
+			}
+			
+			div#content {
+				max-width: 940px;
+				margin: 5px auto;
+				border: 1px solid #E8E8E8;
+			    border-radius: 10px 10px 10px 10px;
+				padding: 10px 20px;
+				background-color: #FFF;
+			}
+			
+			pre {
+			    background-color: #F7F7F7;
+			    border: 1px solid #E8E8E8;
+			    border-radius: 5px 5px 5px 5px;
+			    color: #314E64;
+			    font-family: "Menlo","Courier New","Courier",monospace;
+			    line-height: 1.3em;
+			    margin: 10px 0 14px;
+			    max-width: 900px;
+			    overflow-x: auto;
+			    overflow-y: hidden;
+			    padding: 10px 20px;
+			}
+			
+			
+		</style>
 	</head>
 	<body>
+		<div id="content">
+		<img src="/images/cfqr-banner-865x160.gif" alt="CFQueryReader Logo" style="width:865px;height:160px;border:0;" /><br /><br />
+		<p>The CFQueryReader custom ExtJS Data Reader is used by a Proxy to read a ColdFusion server response that is sent back in JSON format. This usually happens as a result of loading a Store - for example we might create something like this:</p>
+		
+<pre><code>
+Ext.define('User', {
+    extend: 'Ext.data.Model',
+    fields: ['id', 'name', 'email']
+});
+
+var store = Ext.create('Ext.data.Store', {
+    model: 'User',
+    proxy: {
+        type: 'ajax',
+        url : '/some/cfc/path.cfc',
+        extraParams: {
+        	method: 'someMethod',
+        	returnFormat: 'json'
+        },
+        reader: {
+            type: 'cfquery'
+        }
+    }
+});
+</code></pre>
+
+		<p>The example above creates a 'User' model. Models are explained in the <a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.Model" target="_blank">Model</a> docs if you're not already familiar with them.</p>
+
+		<p>We created the simplest type of CFQueryReader possible by simply telling our <a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.Store" target="_blank">Store</a>'s <a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.proxy.Proxy" target="_blank">Proxy</a> that we want a CFQueryReader. The Store automatically passes the configured model to the Store, so it is as if we passed this instead:</p>
+
+<pre><code>
+reader: {
+    type : 'cfquery',
+    model: 'User'
+}
+</code></pre>
+
+		<p>The reader we set up is ready to read data from our server - at the moment it will accept a response like this:</p>
+
+<pre><code>
+{
+	"COLUMNS":["ID","NAME","EMAIL"],
+	"DATA":[
+		[1,"Ed Spencer","ed@sencha.com"],
+		[2,"Abe Elias","abe@sencha.com"],
+		[3,"Cutter","no@address.giv"]
+	]
+}
+</code></pre>
+
+		<p>CFQueryReader will also, natively, treat output from a ColdFusion <a href="http://www.cfquickdocs.com/cf9/#queryconvertforgrid" target="_blank">QueryConvertForGrid</a> function call. That function returns a ColdFusion struct, which is then serialized into a JSON object like this:</p>
+		
+<pre><code>
+{
+    "TOTALROWCOUNT":3, 
+	"QUERY":{
+	    "COLUMNS":["ID","NAME","EMAIL"],
+        "DATA":[
+		    [1,"Ed Spencer","ed@sencha.com"],
+			[2,"Abe Elias","abe@sencha.com"],
+			[3,"Cutter","no@address.giv"]
+		]
+	}
+}
+</code></pre>
+
+		<p>Reading this response is automatic for the CFQueryReader, with minimal configuration:</p>
+		
+<pre><code>
+reader: {
+    type: 'cfquery'
+}
+</code></pre>
+
+		<p><u>Reading other JSON formats</u></p>
+
+		<p>If you already have your JSON format defined and it doesn't look quite like what we have above, you can usually pass CFQueryReader a couple of configuration options to make it parse your format. For example, we can use the {@link #query} configuration to parse data that comes back like this:</p>
+
+<pre><code>
+{
+    "recordCount":3,
+	"success":true,
+	"message":"",
+	"activeUsers":{
+	    "COLUMNS":["ID","NAME","EMAIL"],
+        "DATA":[
+		    [1,"Ed Spencer","ed@sencha.com"],
+			[2,"Abe Elias","abe@sencha.com"],
+			[3,"Cutter","no@address.giv"]
+		]
+	}
+}
+</code></pre>
+
+		<p>To parse this we just pass in a <em>query</em> configuration that matches the serialized query object above:</p>
+
+<pre><code>
+reader: {
+    type: 'cfquery',
+    query: 'activeUsers',
+    totalProperty: 'recordCount',
+	successProperty: 'success',
+	messageProperty: 'message'
+}
+</code></pre>
+
+		<!-- <p><u>Response MetaData</u></p>
+
+		<p>The server can return metadata in its response, in addition to the record data, that describe attributes of the data set itself or are used to reconfigure the Reader. To pass metadata in the response you simply add a `metaData` attribute to the root of the response data. The metaData attribute can contain anything, but supports a specific set of properties that are handled by the Reader if they are present:</p>
+
 		<ul>
-			<li><a href="/index-3.html">CFQueryReader For ExtJS 3</a></li>
-			<li><a href="/index-4.html">CFQueryReader For ExtJS 4.1 RC2</a></li>
+			<li><em>query</em>: the property name of the query response node containing the serialized ColdFusion query object</li>
+			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.reader.Reader-cfg-idProperty" target="_blank">idProperty</a>: property name for the primary key field of the data</li>
+			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.reader.Reader-cfg-totalProperty" target="_blank">totalProperty</a>: property name for the total number of records in the data</li>
+			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.reader.Reader-cfg-successProperty" target="_blank">successProperty</a>: property name for the success status of the response</li>
+			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.reader.Reader-cfg-messageProperty" target="_blank">messageProperty</a>: property name for an optional response message</li>
+			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.Model-cfg-fields" target="_blank">fields</a>: Config used to reconfigure the Model's fields before converting the response data into records</li>
 		</ul>
+
+		<p>An initial Reader configuration containing all of these properties might look like this ("fields" would be included in the Model definition, not shown):</p>
+
+<pre><code>
+reader: {
+    type : 'cfquery',
+    query : 'data',
+    idProperty     : 'id',
+    totalProperty  : 'total',
+    successProperty: 'success',
+    messageProperty: 'message'
+}
+</code></pre>
+
+		<p>If you were to pass a response object containing attributes different from those initially defined above, you could use the `metaData` attribute to reconifgure the Reader on the fly. For example:</p>
+
+<pre><code>
+{
+    "count": 3,
+    "ok": true,
+    "msg": "Users found",
+	"users":{
+		"COLUMNS":["ID","NAME","EMAIL"],
+		"DATA":[
+			[1,"Ed Spencer","ed@sencha.com"],
+			[2,"Abe Elias","abe@sencha.com"],
+			[3,"Cutter","no@address.giv"]
+		]
+	}
+    "metaData": {
+        "root": "users",
+        "idProperty": 'id',
+        "totalProperty": 'count',
+        "successProperty": 'ok',
+        "messageProperty": 'msg'
+    }
+}
+</code></pre>
+
+		<p>You can also place any other arbitrary data you need into the `metaData` attribute which will be ignored by the Reader, but will be accessible via the Reader's {@link #metaData} property (which is also passed to listeners via the Proxy's {@link Ext.data.proxy.Proxy#metachange metachange} event (also relayed by the {@link Ext.data.AbstractStore#metachange store}). Application code can then process the passed metadata in any way it chooses.</p>
+
+		<p>A simple example for how this can be used would be customizing the fields for a Model that is bound to a grid. By passing the `fields` property the Model will be automatically updated by the Reader internally, but that change will not be reflected automatically in the grid unless you also update the column configuration. You could do this manually, or you could simply pass a standard grid {@link Ext.panel.Table#columns column} config object as part of the `metaData` attribute and then pass that along to the grid. Here's a very simple example for how that could be accomplished:</p>
+
+<pre><code>
+// response format:
+{
+    ...
+    "metaData": {
+        "fields": [
+            { "name": "userId", "type": "int" },
+            { "name": "name", "type": "string" },
+            { "name": "birthday", "type": "date", "dateFormat": "Y-j-m" },
+        ],
+        "columns": [
+            { "text": "User ID", "dataIndex": "userId", "width": 40 },
+            { "text": "User Name", "dataIndex": "name", "flex": 1 },
+            { "text": "Birthday", "dataIndex": "birthday", "flex": 1, "format": 'Y-j-m', "xtype": "datecolumn" }
+        ]
+    }
+}
+</code></pre>
+
+		<p>The Reader will automatically read the meta fields config and rebuild the Model based on the new fields, but to handle the new column configuration you would need to handle the metadata within the application code. This is done simply enough by handling the metachange event on either the store or the proxy, e.g.:</p>
+
+<pre><code>
+var store = Ext.create('Ext.data.Store', {
+    ...
+    listeners: {
+        'metachange': function(store, meta) {
+            myGrid.reconfigure(store, meta.columns);
+        }
+    }
+});
+</code></pre> -->
+
+		<ul>
+			<li><a href="/index-4.html" target="_blank">CFQueryReader Demo For ExtJS 4.1 RC2</a></li>
+			<li><a href="/index-3.html" target="_blank">CFQueryReader Demo For ExtJS 3</a></li>
+		</ul>
+		</div>
 	</body>
 </html>
