@@ -5,7 +5,8 @@ and thecfartgallery datasource (part of the demo applications).
 
 The 'Artists.cfc' has been upgraded to a fully scripted component, for
 ColdFusion 9. There is an unscripted component in the same directory, but
-you'll have to change the file names.
+you'll have to change the file names. The examples use the 'cfartgallery'
+datasource that is included in the ColdFusion installation.
 
 ColdFusion Download page
 http://www.adobe.com/support/coldfusion/downloads.html
