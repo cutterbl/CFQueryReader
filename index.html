@@ -1,13 +1,26 @@
 <!doctype html>
 <html>
 	<head>
+		<meta charset="UTF-8" />
 		<title>CFQueryReader Demos: Custom ExtJS data reader for native ColdFusion query data</title>
+		<meta name="keywords" content="ColdFusion,Ext JS,ExtJS,Javascript,CFQueryReader" />
+		<meta name="description" content="CFQueryReader is a custom Ext data reader, to parse the native JSON return of a ColdFusion Query object." />
+		<meta name="author" content="Steve 'Cutter' Blades" />
+		<meta name="copyright" content="(c)2008 - 2012 Stephen Blades" />
 		<link rel="stylesheet" type="text/css" href="/css/default.css" />
 		<link rel="shortcut icon" href="/favicon_32x32.ico" />
 	</head>
 	<body>
 		<div id="content">
 		<img src="/images/cfqr-banner-865x160.gif" alt="CFQueryReader Logo" style="width:865px;height:160px;border:0;" /><br /><br />
+		<ul>
+			<li><b>Project:</b> - <a href="https://github.com/cutterbl/CFQueryReader" target="_blank">CFQueryReader</a></li>
+			<li><b>Author:</b> - <a href="http://www.cutterscrossing.com">Steve 'Cutter' Blades</a></li>
+			<li><b>Version:</b> - 2.0</li>
+			<li><b>Revised:</b> - 10 April, 2012</li>
+			<li><b>Tags:</b> - <a href="http://www.adobe.com/products/coldfusion" target="_blank">ColdFusion</a>, <a href="http://www.sencha.com/products/extjs/" target="_blank">Ext JS</a>, JavaScript, Development</li>
+		</ul><br />
+		<p style="font-style: italic;"><b>Note:</b> CFQueryReader has now been upgraded for Ext JS 4.x, and no further work will be done to support past versions. The last working version for Ext JS 2 & 3 is version 1.2. See our <a href="https://github.com/cutterbl/CFQueryReader" target="_blank">GitHub repository</a> for previous versions. Special thanks to Sencha's Ed Spencer for some of this verbiage, and to the whole Sencha team for Ext JS and SenchaTouch. Links to demos, using Ext JS 2, 3 and 4, can be found at the bottom of this page.</p><br />
 		<p>The CFQueryReader custom ExtJS Data Reader is used by a Proxy to read a ColdFusion server response that is sent back in JSON format. This usually happens as a result of loading a Store - for example we might create something like this:</p>
 		
 <pre><code>
