@@ -12,24 +12,20 @@ Ext.onReady(function(){
 		idProperty: 'id'
 	});
 	
-	Ext.create('Ext.data.Store', {
+	var storeBase = {
 		model: 'Entry',
-		storeId: 'entryStore',
 		remoteSort: true,
 		proxy: {
 			type: 'ajax',
 			url: '/com/cc/Blog/Entries.cfc',
 			extraParams: {
-				method: 'GetEntries',
 				returnFormat: 'json'
 			},
 			limitParam: 'pageSize',
 			pageParam: 'pageIndex',
 			sortParam: 'sort',
 			reader: {
-				type: 'cfquery',
-				query: 'data',
-				totalProperty: 'recordCount'
+				type: 'cfquery'
 			}
 		},
 		autoLoad: true/*,
@@ -38,25 +34,88 @@ Ext.onReady(function(){
 				console.log('records: ',recs);
 			}
 		}*/
-	});
+	};
 	
-	Ext.create('Ext.grid.Panel',{
-		title: 'Blog Entries',
-		store: Ext.getStore('entryStore'),
+	var gridPanelBase = {
 		columns: [
 		    {header: 'ID', dataIndex: 'id'},
 		    {header: 'Title', dataIndex: 'title'},
 		    {header: 'Posted', dataIndex: 'posted'},
 		    {header: 'Views', dataIndex: 'views'}
 		],
-		height: 500,
-		width: 600,
-		renderTo: Ext.getBody(),
-		dockedItems: [{
-			xtype: 'pagingtoolbar',
-			dock: 'top',
+		height: 380,
+		width: 600
+	}
+	
+	Ext.create('Ext.data.Store', Ext.Object.merge({}, storeBase,{
+			storeId: 'entryStore',
+			proxy: {
+				extraParams: {
+					method: 'GetAllStandard'
+				}
+			}
+		})
+	);
+	
+	Ext.create('Ext.grid.Panel', Ext.Object.merge({}, gridPanelBase, {
+			title: 'Testing: GetAllStandard (Basic CF Query object)',
 			store: Ext.getStore('entryStore'),
-			displayInfo: true
-		}]
-	});
+			renderTo: 'demo1'
+		})
+	);
+	
+	// Second demo, with a ColdFusion Query run through QueryForGrid()
+	Ext.create('Ext.data.Store', Ext.Object.merge({}, storeBase,{
+			storeId: 'entryStore_2',
+			proxy: {
+				extraParams: {
+					method: 'getAllQCFG'
+				}
+			}
+		})
+	);
+	
+	Ext.create('Ext.grid.Panel', Ext.Object.merge({}, gridPanelBase, {
+			title: 'Testing: getAllQCFG (QueryForGrid created struct)',
+			store: Ext.getStore('entryStore_2'),
+			renderTo: 'demo2',
+			dockedItems: [{
+				xtype: 'pagingtoolbar',
+				dock: 'top',
+				store: Ext.getStore('entryStore_2'),
+				displayInfo: true
+			}]
+		})
+	);
+	
+	// Third demo, with a ColdFusion Struct returned
+	Ext.create('Ext.data.Store', Ext.Object.merge({}, storeBase,{
+			storeId: 'entryStore_3',
+			proxy: {
+				extraParams: {
+					method: 'getAllInStruct'
+				},
+				reader: {
+					query: 'data',
+					query: 'getEntries',
+					totalProperty: 'recordCount',
+					successProperty: 'success',
+					messageProperty: 'message'
+				}
+			}
+		})
+	);
+	
+	Ext.create('Ext.grid.Panel', Ext.Object.merge({}, gridPanelBase, {
+			title: 'Testing: getAllInStruct (query as part of custom struct)',
+			store: Ext.getStore('entryStore_3'),
+			renderTo: 'demo3',
+			dockedItems: [{
+				xtype: 'pagingtoolbar',
+				dock: 'top',
+				store: Ext.getStore('entryStore_3'),
+				displayInfo: true
+			}]
+		})
+	);
 });

@@ -50,7 +50,7 @@ Ext.onReady(function(){
 		// The base Window config
 		var testWin = new Ext.Window({
 			title:'Testing: ' + ((st.id) ? st.id : st.storeId), // Id is stored differently between Ext 2.x and 3.x
-			width:300,
+			width:500,
 			height:300,
 			items:[{
 				html:'Testing ->'
@@ -62,22 +62,22 @@ Ext.onReady(function(){
 			html:'getCount() test: ' + st.getCount()
 		},{
 			// Total count, which could be returned from the server or defaulted to record count
-			html:'getTotalCount() test: ' + st.getTotalCount() + ((st.getTotalCount() > 15) ? " faked out through returned property" : "")
+			html:'getTotalCount() test: ' + st.getTotalCount()
 		},{
-			// Gets the index of the record with an Id of '11'
-			html:'IndexOfId(11) test: ' + st.indexOfId(11)
+			// Gets the index of the record with an Id of '7002F501-3048-71C2-17A466137D92D729'
+			html:'IndexOfId("7002F501-3048-71C2-17A466137D92D729") test: ' + st.indexOfId('7002F501-3048-71C2-17A466137D92D729')
 		},{
-			// Should pass in all tests, getting the record with an Id of '11'
-			html:'getById(11) pass test: ' + ((st.getById(11)) ? 'record retrieved' : 'failed to retrieve')
+			// Should pass in all tests, getting the record with an Id of '7002F501-3048-71C2-17A466137D92D729'
+			html:'getById("7002F501-3048-71C2-17A466137D92D729") pass test: ' + ((st.getById('7002F501-3048-71C2-17A466137D92D729')) ? 'record retrieved' : 'failed to retrieve')
 		},{
 			// Should fail in all tests, getting the record with an Id of '16'
 			html:'getById(16) fail test: ' + ((st.getById(16)) ? 'record retrieved' : 'failed to retrieve')
 		},{
-			// Getting the record at the index of (the record with an Id of '11') should always pass
-			html:'getAt(st.indexOfId(11)) test: ' + ((st.getAt(st.indexOfId(11))) ? 'record retrieved' : 'failed to retrieve')
+			// Getting the record at the index of (the record with an Id of '7002F501-3048-71C2-17A466137D92D729') should always pass
+			html:'getAt(st.indexOfId("7002F501-3048-71C2-17A466137D92D729")) test: ' + ((st.getAt(st.indexOfId("7002F501-3048-71C2-17A466137D92D729"))) ? 'record retrieved' : 'failed to retrieve')
 		},{
-			// This item is at the same index of the record with an Id of '11', and should always pass
-			html:'find("lastName","Kunovic") test: record index ' + st.find("lastName","Kunovic")
+			// This item is at the same index of the record with an Id of '7002F501-3048-71C2-17A466137D92D729', and should always pass
+			html:'find("title","Ext Custom Data Reader for ColdFusion: More Info") test: record index ' + st.find("title","Ext Custom Data Reader for ColdFusion: More Info")
 		});
 		
 		// Show the window
@@ -92,17 +92,10 @@ Ext.onReady(function(){
 	
 	// This is the Field Definition to be used by the CFQueryReader of each Store
 	var fieldDef = [
-    	{name:'city', type:'string'},
-		{name:'state', type:'string'},
-		{name:'zip', mapping:'postalcode', type:'string'},
-    	{name:'email', type:'string'},
-		{name:'phone', type:'string'},
-		{name:'fax',type:'string'},
-		{name:'thepassword',type:'string'},
-    	{name:'artistId', type:'int'},
-		{name:'firstName', type:'string'},
-		{name:'lastName', type:'string'},
-		{name:'address', type:'string'}
+    	{name: 'id', type: 'string'},
+	    {name: 'title', type: 'string'},
+	    {name: 'posted', type: 'date'},
+	    {name: 'views', type: 'int'}
     ];
 	
 	// Test GetAllStandard
@@ -111,7 +104,7 @@ Ext.onReady(function(){
         directFn:com.cc.testProxy.getAllStandard,
         paramsAsHash: false,
         reader: new Ext.data.CFQueryReader({
-        	id:'artistId'
+        	id:'id'
         },fieldDef),
         listeners: {
             load:{
@@ -130,15 +123,15 @@ Ext.onReady(function(){
     
     // Test getAllQCFG
 	var qds = new Ext.data.Store({
-            url: '/com/cc/ArtGallery/Artists.cfc',
+            url: '/com/cc/Blog/Entries.cfc',
             id: 'QueryConvertForGrid',
             baseParams:{
             	method: 'getAllQCFG',
             	returnFormat: 'JSON'
             },
             reader: new Ext.data.CFQueryReader({
-            	id:'artistId'
-            },fieldDef),
+            	id:'id'
+            }, fieldDef),
             listeners: {
                 load:{
                 	fn: testStore
@@ -156,15 +149,16 @@ Ext.onReady(function(){
     
     // Test getAllInStruct
 	var stds = new Ext.data.Store({
-            url: '/com/cc/ArtGallery/Artists.cfc',
+            url: '/com/cc/Blog/Entries.cfc',
             id: 'Struct',
             baseParams:{
             	method: 'getAllInStruct',
             	returnFormat: 'JSON'
             },
             reader: new Ext.data.CFQueryReader({
-            	id:'artistId',
-            	root:'getArtists'
+            	id: 'id',
+            	root: 'getEntries',
+            	totalProperty: 'recordCount'
             },fieldDef),
             listeners: {
                 load:{

@@ -26,6 +26,60 @@ component {
 	 */
 	VARIABLES._COLUMNARRAY = ["id","title","posted","views"];
 	VARIABLES._DIRARRAY = ["asc","desc"];
+	VARIABLES.dsn = "blog";
+
+	/**
+	 *	FUNCTION GetAllStandard
+	 *	A function to return a very basic ColdFusion Query object
+	 *
+	 *	@access remote
+	 *	@returnType query
+	 *	@output false
+	 */
+	function GetAllStandard(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "") {
+		LOCAL.tmp = GetEntries(argumentCollection: ARGUMENTS);
+		LOCAL['retVal'] = QueryNew('id,title,posted,views');
+		if (LOCAL.tmp.success) {
+			LOCAL.retVal = LOCAL.tmp.getEntries;
+		}
+		return LOCAL.retVal;
+	}
+
+	/**
+	 *	FUNCTION getAllQCFG
+	 *	This function returns a ColdFusion object, created by the QueryConvertForGrid() method.
+	 *	The method returns a struct, with the Query object as one key and the total count as another.
+	 *	See the Adobe ColdFusion documentation for more information on QueryConvertForGrid(), which
+	 *	is used for *very* basic paging sets for simple paging grids with a low number of overall records.
+	 *
+	 *	@access remote
+	 *	@returnType struct
+	 *	@output false
+	 */
+	function getAllQCFG(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "") {
+		ARGUMENTS.limit = false;
+		LOCAL.tmp = GetEntries(argumentCollection: ARGUMENTS);
+		LOCAL['retVal'] = QueryNew('id,title,posted,views');
+		if (LOCAL.tmp.success) {
+			LOCAL.retVal = LOCAL.tmp.getEntries;
+		}
+		return QueryConvertForGrid(LOCAL.retVal, ARGUMENTS.pageIndex, ARGUMENTS.pageSize);
+	}
+
+	/**
+	 *	FUNCTION getAllInStruct
+	 *	This function returns the ColdFusion Query object as part of a struct object. We are implicitly
+	 *	setting the TOTALROWCOUNT variable to fake out our reader, showing that the totalProperty attribute
+	 *	of the meta object will work properly. This also lets us further test the root attribute of the
+	 *	meta object, as well as how well the CFQueryReader will map columns to values for later data retrieval
+	 *
+	 *	@access remote
+	 *	@returnType struct
+	 *	@output false
+	 */
+	function getAllInStruct(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "") {
+		return GetEntries(argumentCollection: ARGUMENTS);
+	}
 
 	/**
 	 *	FUNCTION GetEntries
@@ -35,8 +89,8 @@ component {
 	 *	@returnType struct
 	 *	@output false
 	 */
-	function GetEntries(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "") {
-		LOCAL.retVal = {"success" = true, "pageIndex" = ARGUMENTS.pageIndex, "pageCount" = 0, "recordCount" = 0, "message" = "", "data" = ""};
+	function GetEntries(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "", boolean limit = true) {
+		LOCAL.retVal = {"success" = true, "pageIndex" = ARGUMENTS.pageIndex, "pageCount" = 0, "recordCount" = 0, "message" = "", "getEntries" = ""};
 		LOCAL.orderby = "posted DESC";
 		if(Len(ARGUMENTS.sort) AND IsJSON(ARGUMENTS.sort)){
 			ARGUMENTS.sort = DeserializeJSON(ARGUMENTS.sort);
@@ -83,9 +137,11 @@ component {
 			 AND :to
 			 ";
 		}
-		LOCAL.sql &= "ORDER BY #LOCAL.orderby#
-					 LIMIT	:start,:numRec";
-		LOCAL.q = new Query(sql = LOCAL.sql);
+		LOCAL.sql &= "ORDER BY #LOCAL.orderby#";
+		if (ARGUMENTS.limit) {
+			LOCAL.sql &= " LIMIT	:start,:numRec";
+		}
+		LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
 		LOCAL.q.addParam(name = "start", value = (ARGUMENTS.pageIndex-1) * ARGUMENTS.pageSize, cfsqltype = "cf_sql_integer");
 		LOCAL.q.addParam(name = "numRec", value = ARGUMENTS.pageSize, cfsqltype = "cf_sql_integer");
 		if(Len(ARGUMENTS.search.title)){
@@ -100,8 +156,8 @@ component {
 		}
 
 		try {
-			LOCAL.retVal.data = LOCAL.q.execute().getResult();
-			if(LOCAL.retVal.data.recordCount){
+			LOCAL.retVal.getEntries = LOCAL.q.execute().getResult();
+			if(LOCAL.retVal.getEntries.recordCount){
 				/*
 				 * The next statement is used to provide a TotalCount of all matched records.
 				 */
@@ -115,6 +171,7 @@ component {
 		} catch (any excpt) {
 			LOCAL.retVal.success = false;
 			LOCAL.retVal.message = excpt.message;
+			LOCAL.retVal.getEntries = QueryNew('id,title,posted,views');
 		}
 		return LOCAL.retVal;
 	}
@@ -173,7 +230,7 @@ component {
 		}
 		LOCAL.sql &= "ORDER BY #LOCAL.orderby#
 					 LIMIT	:start,:numRec";
-		LOCAL.q = new Query(sql = LOCAL.sql);
+		LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
 		LOCAL.q.addParam(name = "start", value = (ARGUMENTS.pageIndex-1) * ARGUMENTS.pageSize, cfsqltype = "cf_sql_integer");
 		LOCAL.q.addParam(name = "numRec", value = ARGUMENTS.pageSize, cfsqltype = "cf_sql_integer");
 		if(Len(ARGUMENTS.search.title)){
@@ -222,7 +279,7 @@ component {
 
 		LOCAL.sql = "DELETE FROM tblblogentries
 					 WHERE id = :recId";
-		LOCAL.q = new Query(sql = LOCAL.sql);
+		LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
 		LOCAL.q.addParam(name = "recId", value = ARGUMENTS.recId, cfsqltype = "cf_sql_varchar");
 		try {
 			// You would uncomment the following line to actually remove records, and remove the throw statement
