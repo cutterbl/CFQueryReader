@@ -37,8 +37,8 @@ component {
 	 *	@output false
 	 */
 	function GetAllStandard(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "") {
-		LOCAL.tmp = GetEntries(argumentCollection: ARGUMENTS);
-		LOCAL['retVal'] = QueryNew('id,title,posted,views');
+		var LOCAL.tmp = GetEntries(argumentCollection: ARGUMENTS);
+		var LOCAL['retVal'] = QueryNew('id,title,posted,views');
 		if (LOCAL.tmp.success) {
 			LOCAL.retVal = LOCAL.tmp.getEntries;
 		}
@@ -58,8 +58,8 @@ component {
 	 */
 	function getAllQCFG(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "") {
 		ARGUMENTS.limit = false;
-		LOCAL.tmp = GetEntries(argumentCollection: ARGUMENTS);
-		LOCAL['retVal'] = QueryNew('id,title,posted,views');
+		var LOCAL.tmp = GetEntries(argumentCollection: ARGUMENTS);
+		var LOCAL['retVal'] = QueryNew('id,title,posted,views');
 		if (LOCAL.tmp.success) {
 			LOCAL.retVal = LOCAL.tmp.getEntries;
 		}
@@ -82,6 +82,31 @@ component {
 	}
 
 	/**
+	 *	FUNCTION getWithMeta
+	 *	This function returns the ColdFusion Query object as part of a struct object. We are implicitly
+	 *	setting the TOTALROWCOUNT variable to fake out our reader, showing that the totalProperty attribute
+	 *	of the meta object will work properly. This also lets us further test the root attribute of the
+	 *	meta object, as well as how well the CFQueryReader will map columns to values for later data retrieval
+	 *
+	 *	@access remote
+	 *	@returnType struct
+	 *	@output false
+	 */
+	function getWithMeta(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "") {
+		var LOCAL.retVal = {"success" = true, "pageIndex" = ARGUMENTS.pageIndex, "pageCount" = 0, "recordCount" = 0, "message" = "", "getEntries" = "", "metaData" = {"root" = "getEntries", "totalProperty" = "recordCount", "successProperty" = "success", "messageProperty" = "message", "idProperty" = "id", "fields" = []}};
+		StructAppend(LOCAL.retVal, GetEntries(argumentCollection: ARGUMENTS), true);
+		var LOCAL.colArr = ListToArray(LOCAL.retVal.getEntries.columnList);
+		//WriteDump(var=LOCAL.retVal.getEntries,abort=true);
+		LOCAL.retVal.metaData.fields = [
+			{"name" = "id", "type" = "string", "mapping" = JavaCast("int",0)},
+			{"name" = "title", "type" = "string", "mapping" = JavaCast("int",3)},
+			{"name" = "posted", "type" = "date", "mapping" = JavaCast("int",2)},
+			{"name" = "views", "type" = "int", "mapping" = JavaCast("int",1)}
+		];
+		return LOCAL.retVal;
+	}
+
+	/**
 	 *	FUNCTION GetEntries
 	 *	A function to get paging query of blog entries for layout in jqGrid
 	 *
@@ -90,8 +115,8 @@ component {
 	 *	@output false
 	 */
 	function GetEntries(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "", boolean limit = true) {
-		LOCAL.retVal = {"success" = true, "pageIndex" = ARGUMENTS.pageIndex, "pageCount" = 0, "recordCount" = 0, "message" = "", "getEntries" = ""};
-		LOCAL.orderby = "posted DESC";
+		var LOCAL.retVal = {"success" = true, "pageIndex" = ARGUMENTS.pageIndex, "pageCount" = 0, "recordCount" = 0, "message" = "", "getEntries" = ""};
+		var LOCAL.orderby = "posted DESC";
 		if(Len(ARGUMENTS.sort) AND IsJSON(ARGUMENTS.sort)){
 			ARGUMENTS.sort = DeserializeJSON(ARGUMENTS.sort);
 		}
@@ -117,14 +142,14 @@ component {
 		param name="ARGUMENTS.search.title" default="";
 		param name="ARGUMENTS.search.from" default="";
 		param name="ARGUMENTS.search.to" default="";
-		LOCAL.hasFrom = Len(ARGUMENTS.search.from) AND IsDate(ARGUMENTS.search.from);
-		LOCAL.hasTo = Len(ARGUMENTS.search.to) AND IsDate(ARGUMENTS.search.to);
+		var LOCAL.hasFrom = Len(ARGUMENTS.search.from) AND IsDate(ARGUMENTS.search.from);
+		var LOCAL.hasTo = Len(ARGUMENTS.search.to) AND IsDate(ARGUMENTS.search.to);
 
 		// Main data query
-		LOCAL.sql = "SELECT	SQL_CALC_FOUND_ROWS id,
-						title,
+		var LOCAL.sql = "SELECT	SQL_CALC_FOUND_ROWS id,
+						views,
 						posted,
-						views
+						title
 					FROM	tblblogentries
 					WHERE 0 = 0
 					 ";
@@ -141,7 +166,7 @@ component {
 		if (ARGUMENTS.limit) {
 			LOCAL.sql &= " LIMIT	:start,:numRec";
 		}
-		LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
+		var LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
 		LOCAL.q.addParam(name = "start", value = (ARGUMENTS.pageIndex-1) * ARGUMENTS.pageSize, cfsqltype = "cf_sql_integer");
 		LOCAL.q.addParam(name = "numRec", value = ARGUMENTS.pageSize, cfsqltype = "cf_sql_integer");
 		if(Len(ARGUMENTS.search.title)){
@@ -185,12 +210,12 @@ component {
 	 *	@output false
 	 */
 	function GetGroupedEntries(numeric pageIndex = 1, numeric pageSize = 50, string sortCol = "ID", string sortDir = "desc", string search = "") {
-		LOCAL.retVal = {"success" = true, "pageIndex" = ARGUMENTS.pageIndex, "pageCount" = 0, "recordCount" = 0, "message" = "", "data" = ""};
-		LOCAL.scArr = ListToArray(ARGUMENTS.sortCol);
-		LOCAL.sortCol = (ArrayLen(LOCAL.scArr) eq 2) ? LOCAL.scArr[2] : ARGUMENTS.sortCol;
+		var LOCAL.retVal = {"success" = true, "pageIndex" = ARGUMENTS.pageIndex, "pageCount" = 0, "recordCount" = 0, "message" = "", "data" = ""};
+		var LOCAL.scArr = ListToArray(ARGUMENTS.sortCol);
+		var LOCAL.sortCol = (ArrayLen(LOCAL.scArr) eq 2) ? LOCAL.scArr[2] : ARGUMENTS.sortCol;
 		// Verify that your sort column and direction are valid. If not, then return an error.
 		if(ArrayFindNoCase(VARIABLES._COLUMNARRAY, Trim(LOCAL.sortCol)) AND ArrayFindNoCase(VARIABLES._DIRARRAY, ARGUMENTS.sortDir)){
-			LOCAL.orderby = ARGUMENTS.sortCol & " " & ARGUMENTS.sortDir;
+			var LOCAL.orderby = ARGUMENTS.sortCol & " " & ARGUMENTS.sortDir;
 		} else {
 			StructAppend(LOCAL.retVal,{"success" = false, "message" = "Your sort criteria is not valid."},true);
 			return LOCAL.retVal;
@@ -205,11 +230,11 @@ component {
 		param name="ARGUMENTS.search.title" default="";
 		param name="ARGUMENTS.search.from" default="";
 		param name="ARGUMENTS.search.to" default="";
-		LOCAL.hasFrom = Len(ARGUMENTS.search.from) AND IsDate(ARGUMENTS.search.from);
-		LOCAL.hasTo = Len(ARGUMENTS.search.to) AND IsDate(ARGUMENTS.search.to);
+		var LOCAL.hasFrom = Len(ARGUMENTS.search.from) AND IsDate(ARGUMENTS.search.from);
+		var LOCAL.hasTo = Len(ARGUMENTS.search.to) AND IsDate(ARGUMENTS.search.to);
 
 		// Main data query
-		LOCAL.sql = "SELECT	SQL_CALC_FOUND_ROWS b.id,
+		var LOCAL.sql = "SELECT	SQL_CALC_FOUND_ROWS b.id,
 						b.title,
 						c.categoryname,
 						b.posted,
@@ -230,7 +255,7 @@ component {
 		}
 		LOCAL.sql &= "ORDER BY #LOCAL.orderby#
 					 LIMIT	:start,:numRec";
-		LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
+		var LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
 		LOCAL.q.addParam(name = "start", value = (ARGUMENTS.pageIndex-1) * ARGUMENTS.pageSize, cfsqltype = "cf_sql_integer");
 		LOCAL.q.addParam(name = "numRec", value = ARGUMENTS.pageSize, cfsqltype = "cf_sql_integer");
 		if(Len(ARGUMENTS.search.title)){
@@ -273,13 +298,13 @@ component {
 	 *	@output false
 	 */
 	function deleteEntry(required string recId){
-		LOCAL.retVal = {"success" = true, "message" = "", "data" = ""};
+		var LOCAL.retVal = {"success" = true, "message" = "", "data" = ""};
 
 		// BEST PRACTICE: You'll want to verify that the user has the right to do this. Normally, that would go here.
 
-		LOCAL.sql = "DELETE FROM tblblogentries
+		var LOCAL.sql = "DELETE FROM tblblogentries
 					 WHERE id = :recId";
-		LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
+		var LOCAL.q = new Query(sql = LOCAL.sql, datasource = VARIABLES.dsn);
 		LOCAL.q.addParam(name = "recId", value = ARGUMENTS.recId, cfsqltype = "cf_sql_varchar");
 		try {
 			// You would uncomment the following line to actually remove records, and remove the throw statement

@@ -16,8 +16,8 @@
 		<ul>
 			<li><b>Project:</b> - <a href="https://github.com/cutterbl/CFQueryReader" target="_blank">CFQueryReader</a></li>
 			<li><b>Author:</b> - <a href="http://www.cutterscrossing.com">Steve 'Cutter' Blades</a></li>
-			<li><b>Version:</b> - 2.0</li>
-			<li><b>Revised:</b> - 10 April, 2012</li>
+			<li><b>Version:</b> - 2.1</li>
+			<li><b>Revised:</b> - 09 May, 2012</li>
 			<li><b>Tags:</b> - <a href="http://www.adobe.com/products/coldfusion" target="_blank">ColdFusion</a>, <a href="http://www.sencha.com/products/extjs/" target="_blank">Ext JS</a>, JavaScript, Development</li>
 		</ul><br />
 		<p style="font-style: italic;"><b>Note:</b> CFQueryReader has now been upgraded for Ext JS 4.x, and no further work will be done to support past versions. The last working version for Ext JS 2 & 3 is version 1.2. See our <a href="https://github.com/cutterbl/CFQueryReader" target="_blank">GitHub repository</a> for previous versions. Special thanks to Sencha's Ed Spencer for some of this verbiage, and to the whole Sencha team for Ext JS and SenchaTouch. Links to demos, using Ext JS 2, 3 and 4, can be found at the bottom of this page.</p><br />
@@ -125,7 +125,7 @@ reader: {
 }
 </code></pre>
 
-		<!-- <p><u>Response MetaData</u></p>
+		<p><u>Response MetaData</u></p>
 
 		<p>The server can return metadata in its response, in addition to the record data, that describe attributes of the data set itself or are used to reconfigure the Reader. To pass metadata in the response you simply add a `metaData` attribute to the root of the response data. The metaData attribute can contain anything, but supports a specific set of properties that are handled by the Reader if they are present:</p>
 
@@ -165,7 +165,7 @@ reader: {
 			[2,"Abe Elias","abe@sencha.com"],
 			[3,"Cutter","no@address.giv"]
 		]
-	}
+	},
     "metaData": {
         "root": "users",
         "idProperty": 'id',
@@ -176,9 +176,9 @@ reader: {
 }
 </code></pre>
 
-		<p>You can also place any other arbitrary data you need into the `metaData` attribute which will be ignored by the Reader, but will be accessible via the Reader's {@link #metaData} property (which is also passed to listeners via the Proxy's {@link Ext.data.proxy.Proxy#metachange metachange} event (also relayed by the {@link Ext.data.AbstractStore#metachange store}). Application code can then process the passed metadata in any way it chooses.</p>
+		<p>You can also place any other arbitrary data you need into the `metaData` attribute which will be ignored by the Reader, but will be accessible via the Reader's <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.data.reader.Reader-property-metaData" target="_blank">metaData</a> property (which is also passed to listeners via the Proxy's <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.data.proxy.Proxy-event-metachange" target="_blank">metachange</a> event (also relayed by the <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.data.AbstractStore-event-metachange" target="_blank">store</a>). Application code can then process the passed metadata in any way it chooses.</p>
 
-		<p>A simple example for how this can be used would be customizing the fields for a Model that is bound to a grid. By passing the `fields` property the Model will be automatically updated by the Reader internally, but that change will not be reflected automatically in the grid unless you also update the column configuration. You could do this manually, or you could simply pass a standard grid {@link Ext.panel.Table#columns column} config object as part of the `metaData` attribute and then pass that along to the grid. Here's a very simple example for how that could be accomplished:</p>
+		<p>A simple example for how this can be used would be customizing the fields for a Model that is bound to a grid. By passing the `fields` property the Model will be automatically updated by the Reader internally, but that change will not be reflected automatically in the grid unless you also update the column configuration. You could do this manually, or you could simply pass a standard grid <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.grid.Panel-cfg-columns" target="_blank">column</a> config object as part of the `metaData` attribute and then pass that along to the grid. Here's a very simple example for how that could be accomplished:</p>
 
 <pre><code>
 // response format:
@@ -210,10 +210,11 @@ var store = Ext.create('Ext.data.Store', {
         }
     }
 });
-</code></pre> -->
+</code></pre>
 
 		<ul>
-			<li><a href="/index-4.html" target="_blank">CFQueryReader Demo For ExtJS 4.1 RC2</a></li>
+			<li><a href="/index-5.html" target="_blank">CFQueryReader Demo For ExtJS 4.1.0 - metaData</a></li>
+			<li><a href="/index-4.html" target="_blank">CFQueryReader Demo For ExtJS 4.1.0</a></li>
 			<li><a href="/index-3.html" target="_blank">CFQueryReader Demo For ExtJS 3.x</a></li>
 			<li><a href="/index-2.html" target="_blank">CFQueryReader Demo For ExtJS 2.x</a></li>
 		</ul>
