@@ -93,10 +93,10 @@ component {
 	 *	@output false
 	 */
 	function getWithMeta(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "") {
-		var LOCAL.retVal = {"success" = true, "pageIndex" = ARGUMENTS.pageIndex, "pageCount" = 0, "recordCount" = 0, "message" = "", "getEntries" = "", "metaData" = {"root" = "getEntries", "totalProperty" = "recordCount", "successProperty" = "success", "messageProperty" = "message", "idProperty" = "id", "fields" = []}};
+		var retVal = {"success" = true, "pageIndex" = ARGUMENTS.pageIndex, "pageCount" = 0, "recordCount" = 0, "message" = "", "getEntries" = "", "metaData" = {"root" = "getEntries", "totalProperty" = "recordCount", "successProperty" = "success", "messageProperty" = "message", "idProperty" = "id", "fields" = []}};
 		StructAppend(LOCAL.retVal, GetEntries(argumentCollection: ARGUMENTS), true);
-		var LOCAL.colArr = ListToArray(LOCAL.retVal.getEntries.columnList);
-		//WriteDump(var=LOCAL.retVal.getEntries,abort=true);
+		var colArr = ListToArray(LOCAL.retVal.getEntries.columnList);
+
 		LOCAL.retVal.metaData.fields = [
 			{"name" = "id", "type" = "string", "mapping" = JavaCast("int",0)},
 			{"name" = "title", "type" = "string", "mapping" = JavaCast("int",3)},
