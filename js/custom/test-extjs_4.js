@@ -60,7 +60,14 @@ Ext.onReady(function(){
 	Ext.create('Ext.grid.Panel', Ext.Object.merge({}, gridPanelBase, {
 			title: 'Testing: GetAllStandard (Basic CF Query object)',
 			store: Ext.getStore('entryStore'),
-			renderTo: 'demo1'
+			renderTo: 'demo1',
+			columns: [
+			    {header: 'ID', dataIndex: 'id', hidden: true},
+			    {header: 'Title', dataIndex: 'title', flex: 6},
+			    {header: 'Posted', dataIndex: 'posted', flex: 2},
+			    {header: 'Views', dataIndex: 'views', align: 'right', flex: 2}
+			],
+			scroll: 'vertical'
 		})
 	);
 	

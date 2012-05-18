@@ -1,6 +1,7 @@
 /**
  * @author Steve 'Cutter' Blades
  * @class ColdFusion.data.reader.CFQueryReader
+ * @version 2.2 [05.17.2012]
  *
  * <p>The CFQueryReader Reader is used by a Proxy to read a ColdFusion server response that is sent back in JSON format. This usually
  * happens as a result of loading a Store - for example we might create something like this:</p>
@@ -222,9 +223,9 @@ Ext.define('ColdFusion.data.reader.CFQueryReader',{
 						}
 						// Map the columns. Fields might not map to a column in the response
 						for (var i = 0; i < fields.length; i++) {
-							var pos = obj.COLUMNS.indexOf(fields[i].name.toUpperCase());
+							var pos = Ext.Array.indexOf(obj.COLUMNS, fields[i].name.toUpperCase());
 							if(pos >= 0){
-								fields[i].mapping = obj.COLUMNS.indexOf(fields[i].name.toUpperCase());
+								fields[i].mapping = Ext.Array.indexOf(obj.COLUMNS, fields[i].name.toUpperCase());
 							}
 						}
 						// Put the changes back in the model
@@ -247,7 +248,7 @@ Ext.define('ColdFusion.data.reader.CFQueryReader',{
 					message: err
 				});
 				
-				this.fireEvent('exception', this, response, error);
+				this.fireEvent('exception', this, data, error);
 				
 				Ext.Logger.warn(err);
 				
