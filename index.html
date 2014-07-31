@@ -6,7 +6,7 @@
 		<meta name="keywords" content="ColdFusion,Ext JS,ExtJS,Javascript,CFQueryReader" />
 		<meta name="description" content="CFQueryReader is a custom Ext data reader, to parse the native JSON return of a ColdFusion Query object." />
 		<meta name="author" content="Steve 'Cutter' Blades" />
-		<meta name="copyright" content="(c)2008 - 2012 Stephen Blades" />
+		<meta name="copyright" content="(c)2008 - 2014 Stephen Blades" />
 		<link rel="stylesheet" type="text/css" href="/css/default.css" />
 		<link rel="shortcut icon" href="/favicon_32x32.ico" />
 	</head>
@@ -16,11 +16,11 @@
 		<ul>
 			<li><b>Project:</b> - <a href="https://github.com/cutterbl/CFQueryReader" target="_blank">CFQueryReader</a></li>
 			<li><b>Author:</b> - <a href="http://www.cutterscrossing.com">Steve 'Cutter' Blades</a></li>
-			<li><b>Version:</b> - 2.2</li>
-			<li><b>Revised:</b> - 17 May, 2012</li>
+			<li><b>Version:</b> - 3.0</li>
+			<li><b>Revised:</b> - 31 July, 2014</li>
 			<li><b>Tags:</b> - <a href="http://www.adobe.com/products/coldfusion" target="_blank">ColdFusion</a>, <a href="http://www.sencha.com/products/extjs/" target="_blank">Ext JS</a>, JavaScript, Development</li>
 		</ul><br />
-		<p style="font-style: italic;"><b>Note:</b> CFQueryReader has now been upgraded for Ext JS 4.x, and no further work will be done to support past versions. The last working version for Ext JS 2 & 3 is version 1.2. See our <a href="https://github.com/cutterbl/CFQueryReader" target="_blank">GitHub repository</a> for previous versions. Special thanks to Sencha's Ed Spencer for some of this verbiage, and to the whole Sencha team for Ext JS and SenchaTouch. Links to demos, using Ext JS 2, 3 and 4, can be found at the bottom of this page.</p><br />
+		<p style="font-style: italic;"><b>Note:</b> CFQueryReader has now been upgraded for Ext JS 5.x, and no further work will be done to support past versions. The last working version for Ext JS 2 & 3 is version 1.2, and version 2.2 for Ext JS 4.x. See our <a href="https://github.com/cutterbl/CFQueryReader" target="_blank">GitHub repository</a> for previous versions. Special thanks to Sencha's Ed Spencer for some of this verbiage, and to the whole Sencha team for Ext JS and SenchaTouch. Links to demos, using Ext JS 2, 3, 4, and 5 can be found at the bottom of this page.</p><br />
 		<p>The CFQueryReader custom ExtJS Data Reader is used by a Proxy to read a ColdFusion server response that is sent back in JSON format. This usually happens as a result of loading a Store - for example we might create something like this:</p>
 		
 <pre><code>
@@ -100,16 +100,16 @@ reader: {
 <pre><code>
 {
     "recordCount":3,
-	"success":true,
-	"message":"",
-	"activeUsers":{
-	    "COLUMNS":["ID","NAME","EMAIL"],
+    "success":true,
+    "message":"",
+    "activeUsers":{
+        "COLUMNS":["ID","NAME","EMAIL"],
         "DATA":[
-		    [1,"Ed Spencer","ed@sencha.com"],
-			[2,"Abe Elias","abe@sencha.com"],
-			[3,"Cutter","no@address.giv"]
-		]
-	}
+    	    [1,"Ed Spencer","ed@sencha.com"],
+    		[2,"Abe Elias","abe@sencha.com"],
+    		[3,"Cutter","no@address.giv"]
+    	]
+    }
 }
 </code></pre>
 
@@ -120,99 +120,16 @@ reader: {
     type: 'cfquery',
     query: 'activeUsers',
     totalProperty: 'recordCount',
-	successProperty: 'success',
-	messageProperty: 'message'
-}
-</code></pre>
-
-		<p><u>Response MetaData</u></p>
-
-		<p>The server can return metadata in its response, in addition to the record data, that describe attributes of the data set itself or are used to reconfigure the Reader. To pass metadata in the response you simply add a `metaData` attribute to the root of the response data. The metaData attribute can contain anything, but supports a specific set of properties that are handled by the Reader if they are present:</p>
-
-		<ul>
-			<li><em>query</em>: the property name of the query response node containing the serialized ColdFusion query object</li>
-			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.reader.Reader-cfg-idProperty" target="_blank">idProperty</a>: property name for the primary key field of the data</li>
-			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.reader.Reader-cfg-totalProperty" target="_blank">totalProperty</a>: property name for the total number of records in the data</li>
-			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.reader.Reader-cfg-successProperty" target="_blank">successProperty</a>: property name for the success status of the response</li>
-			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.reader.Reader-cfg-messageProperty" target="_blank">messageProperty</a>: property name for an optional response message</li>
-			<li><a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext.data.Model-cfg-fields" target="_blank">fields</a>: Config used to reconfigure the Model's fields before converting the response data into records</li>
-		</ul>
-
-		<p>An initial Reader configuration containing all of these properties might look like this ("fields" would be included in the Model definition, not shown):</p>
-
-<pre><code>
-reader: {
-    type : 'cfquery',
-    query : 'data',
-    idProperty     : 'id',
-    totalProperty  : 'total',
     successProperty: 'success',
     messageProperty: 'message'
 }
 </code></pre>
 
-		<p>If you were to pass a response object containing attributes different from those initially defined above, you could use the `metaData` attribute to reconifgure the Reader on the fly. For example:</p>
-
-<pre><code>
-{
-    "count": 3,
-    "ok": true,
-    "msg": "Users found",
-	"users":{
-		"COLUMNS":["ID","NAME","EMAIL"],
-		"DATA":[
-			[1,"Ed Spencer","ed@sencha.com"],
-			[2,"Abe Elias","abe@sencha.com"],
-			[3,"Cutter","no@address.giv"]
-		]
-	},
-    "metaData": {
-        "root": "users",
-        "idProperty": 'id',
-        "totalProperty": 'count',
-        "successProperty": 'ok',
-        "messageProperty": 'msg'
-    }
-}
-</code></pre>
-
-		<p>You can also place any other arbitrary data you need into the `metaData` attribute which will be ignored by the Reader, but will be accessible via the Reader's <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.data.reader.Reader-property-metaData" target="_blank">metaData</a> property (which is also passed to listeners via the Proxy's <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.data.proxy.Proxy-event-metachange" target="_blank">metachange</a> event (also relayed by the <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.data.AbstractStore-event-metachange" target="_blank">store</a>). Application code can then process the passed metadata in any way it chooses.</p>
-
-		<p>A simple example for how this can be used would be customizing the fields for a Model that is bound to a grid. By passing the `fields` property the Model will be automatically updated by the Reader internally, but that change will not be reflected automatically in the grid unless you also update the column configuration. You could do this manually, or you could simply pass a standard grid <a href="http://docs.sencha.com/ext-js/4-1/#!/api/Ext.grid.Panel-cfg-columns" target="_blank">column</a> config object as part of the `metaData` attribute and then pass that along to the grid. Here's a very simple example for how that could be accomplished:</p>
-
-<pre><code>
-// response format:
-{
-    ...
-    "metaData": {
-        "fields": [
-            { "name": "userId", "type": "int" },
-            { "name": "name", "type": "string" },
-            { "name": "birthday", "type": "date", "dateFormat": "Y-j-m" },
-        ],
-        "columns": [
-            { "text": "User ID", "dataIndex": "userId", "width": 40 },
-            { "text": "User Name", "dataIndex": "name", "flex": 1 },
-            { "text": "Birthday", "dataIndex": "birthday", "flex": 1, "format": 'Y-j-m', "xtype": "datecolumn" }
-        ]
-    }
-}
-</code></pre>
-
-		<p>The Reader will automatically read the meta fields config and rebuild the Model based on the new fields, but to handle the new column configuration you would need to handle the metadata within the application code. This is done simply enough by handling the metachange event on either the store or the proxy, e.g.:</p>
-
-<pre><code>
-var store = Ext.create('Ext.data.Store', {
-    ...
-    listeners: {
-        'metachange': function(store, meta) {
-            myGrid.reconfigure(store, meta.columns);
-        }
-    }
-});
-</code></pre>
+<p>(Due to changes in the library, we have removed support for metaData manipulation in cfQueryReader for Ext5)</p>
 
 		<ul>
+			<li><a href="/index-7.html" target="_blank">CFQueryReader Demo For ExtJS 5.0.0 and CF 11 queryFormat "struct"</a></li>
+			<li><a href="/index-6.html" target="_blank">CFQueryReader Demo For ExtJS 5.0.0</a></li>
 			<li><a href="/index-5.html" target="_blank">CFQueryReader Demo For ExtJS 4.1.0 - metaData</a></li>
 			<li><a href="/index-4.html" target="_blank">CFQueryReader Demo For ExtJS 4.1.0</a></li>
 			<li><a href="/index-3.html" target="_blank">CFQueryReader Demo For ExtJS 3.x</a></li>

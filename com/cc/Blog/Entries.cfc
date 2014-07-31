@@ -59,9 +59,11 @@ component {
 	function getAllQCFG(numeric pageIndex = 1, numeric pageSize = 50, string sort = "", string search = "") {
 		ARGUMENTS.limit = false;
 		var LOCAL.tmp = GetEntries(argumentCollection: ARGUMENTS);
-		var LOCAL['retVal'] = QueryNew('id,title,posted,views');
+		var LOCAL['retVal'] = "";
 		if (LOCAL.tmp.success) {
 			LOCAL.retVal = LOCAL.tmp.getEntries;
+		} else {
+			LOCAL['retVal'] = QueryNew('id,title,posted,views');
 		}
 		return QueryConvertForGrid(LOCAL.retVal, ARGUMENTS.pageIndex, ARGUMENTS.pageSize);
 	}
@@ -146,10 +148,10 @@ component {
 		var LOCAL.hasTo = Len(ARGUMENTS.search.to) AND IsDate(ARGUMENTS.search.to);
 
 		// Main data query
-		var LOCAL.sql = "SELECT	SQL_CALC_FOUND_ROWS id,
-						views,
-						posted,
-						title
+		var LOCAL.sql = "SELECT	SQL_CALC_FOUND_ROWS id AS Id,
+						views AS Views,
+						posted AS Posted,
+						title AS Title
 					FROM	tblblogentries
 					WHERE 0 = 0
 					 ";

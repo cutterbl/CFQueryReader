@@ -9,9 +9,11 @@ The examples use the 'blog' MySQL datasource that is included in the
 ColdFusion Download page
 http://www.adobe.com/support/coldfusion/downloads.html
 
-There are now two separate query reader files. One is for versions of ExtJS
-prior to version 4. There were tested with Ext 2.x and Ext 3.x. The latest
-supports Ext 4.x, and has been tested through 4.1 RC2.
+There are now three separate query reader files.
+
+* coldfusion.cfqueryreader-3.0.js - tested for ExtJS 5.0.0
+* CFQueryReader-ExtJS4-2.2.js - tested for ExtJS 4.x
+* CFQueryReader-ExtJS3-v1.2.js - tested for ExtJS 2.x and 3.x
 
 Ext JS Downloads
 http://www.sencha.com/products/extjs/download?page=a
