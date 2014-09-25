@@ -1,0 +1,34 @@
+{
+    "name": "CFQueryReader",
+    "type": "code",
+    "creator": "Steve 'Cutter' Blades (package built by Mike Hill)",
+    "summary": "CFQueryReader package",
+    "detailedDescription": "Package created to enhance Ext JS compatibility with ColdFusion application servers.",
+    "version": "1.0.0",
+    "compatVersion": "1.0.0",
+    "format": "1",
+    "slicer": {
+        "js": [
+            {
+                "path": "${package.dir}/sass/example/custom.js",
+                "isWidgetManifest": true
+            }
+        ]
+    },
+    "architect": {
+        "defsonly": true,
+        "compatFrameworks": [
+            "ext50"
+        ],
+        "requires": ["../architect-lib/package-all.js"],
+        "classes": [{
+            "definition": "Ext/ux/CFQueryReader/data/reader/CFQuery.Definition.js",
+            "className": "Ext.ux.CFQueryReader.data.reader.CFQuery",
+            "js": [],
+            "css": []
+        }]
+    },
+    "output": "${package.dir}/build",
+    "local": true,
+    "requires": []
+}
