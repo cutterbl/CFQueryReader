@@ -1,3 +1,5 @@
+NOTE: A new CFQueryReader, supporting ExtJS 5, is available in an ExtJS5 branch.
+
 The CFQueryReader directory should be setup as a site root for testing. 
 All pathing relates to this folder as the site root. You will require
 the ColdFusion 8 or higher Development server to properly call the CFC,
