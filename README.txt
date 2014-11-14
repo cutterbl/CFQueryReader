@@ -1,4 +1,4 @@
-NOTE: A new CFQueryReader, supporting ExtJS 5, is available in an ExtJS5 branch.
+NOTE: A new CFQueryReader, supporting Ext5, is available in an ExtJS5 branch.
 
 The CFQueryReader directory should be setup as a site root for testing. 
 All pathing relates to this folder as the site root. You will require
